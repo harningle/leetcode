@@ -27,7 +27,6 @@ What we really want to know is, for a given number $i \in$ `nums`, does target $
 
 To make it even faster, it's sufficient to check whether target $- i \in$ the numbers we already checked before $i$, rather than the entire `nums`. This follows the same intuition as the brute force above: it's not $N + N + \cdots + N$, but $(N - 1) + (N - 2) + \cdots + 1$: if $a$ and $b$ is compared, we don't need to compare $b$ and $a$ again.
 
-
 ```python
 hashmap = dict()  # {i: i's index in `nums`}
 for idx, i in enumerate(nums):
@@ -36,3 +35,5 @@ for idx, i in enumerate(nums):
         return [idx, hashmap[j]]
     hashmap[i] = idx
 ```
+
+Pure C implementation is more complicated than I expected... There is no easy-to-use builtin hash table in C, and implementing itself (even with the help of some third party lib.) is very tedious... See [https://leetcode.com/problems/two-sum/solutions/1024482/solution-with-c/comments/1668705](https://leetcode.com/problems/two-sum/solutions/1024482/solution-with-c/comments/1668705).
