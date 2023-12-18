@@ -5,7 +5,7 @@ Given an $m \times n$ binary matrix `mat`, return the number of special position
 A position $(i , j)$ is called special if `mat[i][j] == 1` and all other elements in row $i$ and column $j$ are $0$ (rows and columns are 0-indexed).
 
  
-Example:
+**Example:**
 
 | <span style="font-weight:normal">1</span> | <span style="font-weight:normal">0</span> | <span style="font-weight:normal">0</span> |
 |---|---|---|
