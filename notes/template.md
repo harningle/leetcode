@@ -12,11 +12,11 @@ A position $(i , j)$ is called special if `mat[i][j] == 1` and all other element
 | 0 | 0 | 1 |
 | 1 | 0 | 0 |
 
-> Input: `mat = [[1,0,0],[0,0,1],[1,0,0]]`
+> **Input:** `mat = [[1,0,0],[0,0,1],[1,0,0]]`
 > 
-> Output: `1`
+> **Output:** `1`
 > 
-> Explanation: $(1, 2)$ is a special position because `mat[1][2] == 1` and all other elements in row $1$ and column $2$ are $0$.
+> **Explanation:** $(1, 2)$ is a special position because `mat[1][2] == 1` and all other elements in row $1$ and column $2$ are $0$.
 
 
 ## One pass
