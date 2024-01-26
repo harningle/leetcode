@@ -83,22 +83,25 @@ char* longestPalindrome(char* s) {
     ss[n_chars] = '\0';
     
     // Manacher's algo.
-    int* r = calloc(n_chars, sizeof(int)); // Radius of the longest palindrome at each letter
+    int* r = calloc(n_chars, sizeof(int)); // Radius of the longest palindrome
+                                           // at each letter
     int current_r = 0;   // Radius of the current palindrome
     int c = 0;           // Centre of the current palindrome
     int j;               // Symmetric/mirror letter index
     int k;               // From which radius shall we start brute force
     int ans = 1;         // Longest palindrome length
-    int l_idx = 0;       // Beginning and ending index of the longest palindrome
-    int r_idx = 0;
+    int l_idx = 0;       // Beginning index of the longest palindrome
+    int r_idx = 0;       // Ending index of the longest palindrome
+
     for (int i = 0; i < n_chars; i++) {
         j = 2 * c - i;  // i's symmetric part/mirror in the current palindrome
-        k = 0;  // If the current palindrome doesn't cover i, brute force from scratch
+        k = 0;  // If the current palindrome doesn't cover i, brute force from
+                // scratch
 
         // If the current palindrome covers i
         if (i <= c + current_r) {
-            // The brute force starts at the smaller of i's mirror's palindrome length and the
-            // dist. to the boundary of the current palindrome
+            // The brute force starts at the smaller of i's mirror's palindrome
+            // length and the dist. to the boundary of the current palindrome
             if (j > 0) {  // Need to check if the mirror index >= 0
                 if (r[j] < c + current_r - i) {
                     k = r[j];
