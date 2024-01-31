@@ -295,28 +295,60 @@ This decreasing difficulty is why we use a monotonic decreasing stack in the sol
 
 **Now Add Option i. Back.** We always have *option i.* as a candidate $dp$; that's clear. For *option ii.*, if we find a more difficult job in the stack, fine, appending making $dp(i, d) = dp(j, d)$ where $j$ is the previous more difficult job of $i$. What if we cannot find such job? That is, if job $i$ is most difficult job, appending it to whichever split will increase the job difficulty. The question is, which? We "proved" above that $dp(i, d)$ is piecewise constant and non-decreasing in $i$, *if we only allow for appending*. If we allow for *option i.*, $dp$ can increase or decrease, so we have to check all jobs in the stack. E.g. $jobDifficulty = [1, 9, 8, 7, 2, 5, 3, {\color{red}10}]$ and $d = 4$. When we are checking $\color{red}10$, it's true that $\color{red}10$ is more difficult to any of $\{7, 2, 5, 3\}, \{2, 5, 3\}, \{5, 3\}, \{3\}$, but it's not clear which is the best to append $10$ to. I.e., $\underline{1},\underline{9\ 8},\underline{7\ 2},\underline{5\ 3\ \color{red}10}$ is better than $\underline{1},\underline{9},\underline{8},\underline{7\ 2\ 5\ 3\ \color{red}10}$, but it's worse than $\underline{1},\underline{9\ 8\ 7},\underline{2},\underline{5\ 3\ \color{red}10}$. Monotonic stack helps us to skip checking $\{2, 5, 3\}$ as it's (weakly) dominated by $\{5, 3\}$ (bc. the decreasing job difficulty in split above). This is why stack improves time complexity.
  
+### Implementation
 
+```c++
+int minDifficulty(vector<int>& jobDifficulty, int d) {
+    // Need at least d jobs for d days
+    if (jobDifficulty.size() < d) {
+        return -1;
+    }
 
+    // Base case: all jobs in one day. Total diff. = max diff. up until i
+    int n = jobDifficulty.size();
+    vector<int> prev_dp(n);
+    prev_dp[0] = jobDifficulty[0];
+    for (int i = 1; i < n; i++) {
+        prev_dp[i] = (jobDifficulty[i] > prev_dp[i - 1]) ? 
+                     jobDifficulty[i] : prev_dp[i - 1];
+    }
 
+    // Bottom up DP
+    stack<int> s;
+    vector<int> this_dp(n);
+    int j;
+    int append_diff;
+    for (int days = 2; days <= d; days++) {
+        s = stack<int>();  // Clear stack
+        for (int i = days - 1; i < n; i++) {  // Start from days - 1, as #. of
+                                              // jobs >= #. of days
+            // Option i.: creating a new split of job i itself
+            this_dp[i] = prev_dp[i - 1] + jobDifficulty[i];
 
-Suppose the previous last is $\{j, j + 1, \ldots, i - 2, i - 1\}$, and the $u$<sup>th</sup> previous more difficult jobs of $i$ are $k_u$, excl. the first $d - 1$ jobs.[^previous more difficult] We excl. the first $d - 1$ jobs bc. we have $d$ days in total and we have at least one job per day, so previous last split must start at the $d$<sup>th</sup> job or later. Also note that $k_u$ may not exist if $i$ is the most difficult job so far.
+            // Option ii.: appending i to the last split of `prev_dp`
+            // See if this job is more difficult that jobs in the stack
+            while (s.size() && jobDifficulty[i] >= jobDifficulty[s.top()]) {
+                j = s.top();
+                s.pop();
+                // If yes, appending increase the last split's diff.
+                append_diff = this_dp[j] + jobDifficulty[i] - jobDifficulty[j];
+                this_dp[i] = (append_diff < this_dp[i]) ?
+                             append_diff : this_dp[i];
+            }
 
-[^previous more difficult]: E.g., if $jobDifficulty = \{7, 3, 9, 6, 4, 11, 9\}$ and we look at the $i = 4$<sup>th</sup> element $4$. Then $k_1 = 6, k_2 = 9$. The first $1$<sup>st</sup> element $7$ is not there, as we excl. the first $d - 1$ jobs.
+            // If we eventually find a more difficult job in the stack,
+            // appending brings no cost
+            if (s.size()) {
+                append_diff = this_dp[s.top()];
+                this_dp[i] = (append_diff < this_dp[i]) ?
+                             append_diff : this_dp[i];
+            }
+            s.push(i);
+        }
+        swap(this_dp, prev_dp);
+    }
+    return prev_dp[n - 1];
+}
+```
 
-
-*Option ii.* can be further simplified, i.e. no need to try all $j$’s.[^simplify recurrence relation] For a given $i$, let $\definecolor{maroon}{RGB}{128, 0, 0}\color{maroon}k$ be the previous more difficult job before $\color{red}i$. There are two cases where we can place $\definecolor{green}{RGB}{0, 128, 0}\color{green}j$: before or after $\color{maroon}k$.
-
-1. ${\color{green}j} > \color{maroon}k$, i.e. $\{0,\ldots, {\color{maroon}k}, \ldots, {\color{green}j}\}, \{j + 1, \ldots, {\color{red}i}\}$. By definition of $\color{maroon}k$, all numbers between $\color{maroon}k$ and $\color{red}i$ is smaller than $\color{red}i$, so $\{j + 1, \ldots, {\color{red}i}\}$’s difficulty is $jobDifficulty_{\color{red}i}$. Now the problem is what's the difficulty of $\{0,\ldots, {\color{maroon}k}, \ldots, {\color{green}j}\}$.
-
-
-
-
-
-[^why k is the difficulty of the previous last split]
-
-[^why k is the difficulty of the previous last split]: See [https://leetcode.com/problems/minimum-difficulty-of-a-job-schedule/solutions/490316/java-c-python3-dp-o-nd-solution/comments/958543](https://leetcode.com/problems/minimum-difficulty-of-a-job-schedule/solutions/490316/java-c-python3-dp-o-nd-solution/comments/958543).
-
-if the previous more difficult job $k$ is before our last split, then by definition the most difficult job in the last split is $i$ itself, so $\displaystyle dp(i, d) = \min_{j < i} \Big (dp(j, d - 1) + jobDifficulty_i \Big )$. Again, observe that we can ignore all jobs between $k$ and $j$. By definition of $k$, those jobs are easier than $k$ and $i$. Therefore, adding those jobs to the split containing $i$ or $k$ will not affect the split's difficult. Let's put those jobs to the split containing $k$, then we have $\displaystyle dp(i, d) = dp(k, d - 1) + jobDifficulty_i = dp(i - 1, d - 1) + jobDifficulty_i$
-
-1. ${\color{red}k}\geq j + 1$, i.e. $\{0,\ldots, j\}, \{j + 1, \ldots, {\color{red}k}, \ldots, i\}$: if the previous more difficult job is in the last split, then the difficulty of the last split is determined by jobs between $j + 1$ and $\color{red}k$, as by definition all jobs after $\color{red}k$ are easier than $k$. Therefore, $\displaystyle dp(i, d) = \min_{j < i} \Big (dp(j, d - 1) + \max_{j + 1\leq p\leq {\color{red}k}}jobDifficulty_p \Big )$. Further observe that we can actually ignore all jobs after $\color{red}k$ and solve it as if we have $d$ days and the first $0, \ldots, k$ jobs., as $k + 1, \ldots, i$ are all easier than $\color{red}k$; given total #. of splits, adding easier jobs will never increase the total difficulty as we can add them into the last split, whose difficulty is greater or equal than $jobDifficulty_{\color{red}k}$. Thus we have $\displaystyle dp(i, d) = dp(k, d)$
-
+*Notes*: When computing $dp(\cdot, d)$, we only need $dp(\cdot, d - 1)$, so no need to save the entire DP table. We call $dp(\cdot, d)$ `this_dp` and $dp(\cdot, d - 1)$ `prev_dp`.

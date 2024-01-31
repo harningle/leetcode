@@ -7,11 +7,6 @@ A position $(i , j)$ is called special if `mat[i][j] == 1` and all other element
  
 **Example:**
 
-| <span style="font-weight:normal">1</span> | <span style="font-weight:normal">0</span> | <span style="font-weight:normal">0</span> |
-|---|---|---|
-| 0 | 0 | 1 |
-| 1 | 0 | 0 |
-
 > **Input:** `mat = [[1,0,0],[0,0,1],[1,0,0]]`
 > 
 > **Output:** `1`
