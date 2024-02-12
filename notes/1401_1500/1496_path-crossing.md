@@ -4,6 +4,7 @@ Given a string `path`, where `path[i]` = `'N'`, `'S'`, `'E'` or `'W'`, each repr
 
 Return `true` *if the path crosses itself at any point, that is, if at any time you are on a location you have previously visited*. Return `false` otherwise.
 
+
 **Example:**
 
 <img src="https://assets.leetcode.com/uploads/2020/06/10/screen-shot-2020-06-10-at-123843-pm.png" width="50%"/>

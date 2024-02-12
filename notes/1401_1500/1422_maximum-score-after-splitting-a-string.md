@@ -4,6 +4,7 @@ Given a string `s` of zeros and ones, <i>return the maximum score after splittin
 
 The score after splitting a string is the number of **zeros** in the **left** substring plus the number of **ones** in the **right** substring.
 
+
 **Example:**
 
 > **Input:** `s = "011101"`

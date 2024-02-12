@@ -4,7 +4,8 @@ You are given the array `paths`, where <code>paths[i] = [cityA<sub>i</sub>, city
 
 It is guaranteed that the graph of paths forms a line without any loop, therefore, there will be exactly one destination city.
 
-Example:
+
+**Example:**
 
 > **Input:** `paths = [["London","New York"],["New York","Lima"],["Lima","Sao Paulo"]]`
 > 
