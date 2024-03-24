@@ -42,18 +42,19 @@ You must implement the functions of the class such that each function works in a
 
 
 
-## One pass
+## Hashmap + array
 
-The problem is easy but doing it in $O(1)$ is hard.
+As `randomizedSet.insert()` checks if the element exists in the set, and the check shall be done in constant time, it's very straightforward to come up with something like hashmap or hashset, which checks the existence in $O(1)$. Deletion in hashmap is also fast, but getting a random key from it is $O(n)$[^hashmap keys]. To instantly get an element, the common data structure is array, as long as we know its index (, which here will be a random number).
+
+[^hashmap keys]: Getting all keys in a hashmap and populating them in an array is $O(n)$, e.g. `list(dict.keys())` in Python. We have to populate the keys in an array bc. we can't randomly pick a key otherwise.
 
 |         | Insert | Check element existence | Remove | Randomly choose |
 |---------|--------|-------------------------|--------|-----------------|
 | Array   | $O(1)$ | $\color{red}{O(n)}$                  | $\color{red}{O(n)}$ | $O(1)$          |
-| Hashmap | $O(1)$ | $O(1)$                  | $O(1)$ | $\color{red}{O(n)}$[^hashmap keys]          |
+| Hashmap | $O(1)$ | $O(1)$                  | $O(1)$ | $\color{red}{O(n)}$          |
 
-[^hashmap keys]: Getting all keys in a hashmap and populating them in an array is $O(n)$, e.g. `list(dict.keys())` in Python. We have to populate the keys in an array bc. we can't randomly pick a key otherwise.
 
-There is no single data structure that can have everything in $O(1)$, so we need both. Basically, we need an array to store the keys of the hashmap in $O(1)$ so we can call `random.choice` on this array. When we insert a new key, we append a new element to the end of the array, which is $O(1)$. However, as we sometimes want to remove a key, we need to figure out a way to delete element in the array in $O(1)$. The trick is to use index. E.g. `keys = [1, 4, 7, 3, 10]`. We want to delete $7$, whose index is $2$, and the new `keys = [1, 4, 3, 10]`. So we basically want to remove $7$ and shift $3$ and $10$ into the positions previously held by $7$ and $3$. However, such shifting is $O(n)$. Alternatively, as we don't care about the order of keys, we can keep $3$ untouched, and replace $3$ with $10$, which is one single operation, giving `keys = [1, 4, 10, 3]`. That is, we can save the final element, and put that element into the index of the element to be deleted, and pop out the final element. Such deletion is possible only if we can get the index of keys in $O(1)$. So far we only care about the keys of the hashmap, so now we can store the index as values to make the query $O(1)$.
+Therefore, we need both hashmap and array. Basically, we need an array to store the keys of the hashmap in $O(1)$ so we can call `random.choice` on this array. When we insert a new key, we append a new element to the end of the array, which is $O(1)$. However, as we sometimes want to remove a key, we need to figure out a way to delete element in the array in $O(1)$. The trick is to use index. E.g. `keys = [1, 4, 7, 3, 10]`, and we want to delete $7$. Removing an element in the hashmap is $O(1)$, but in array is $O(n)$. One naive way is to remove $7$ and shift $3$ and $10$ one position ahead, giving us `[1, 4, 3, 10]`. However, such shifting is $O(n)$. Alternatively, as we don't care about the order of keys, we can keep all other elements untouched, and replace $7$ with $10$, which is one single operation, giving `keys = [1, 4, 10, 3, 10]`. Finally pop out the last element, which is $O(1)$.
 
 
 ```python
@@ -86,4 +87,42 @@ class RandomizedSet:
 
     def getRandom(self) -> int:
         return random.choice(self.vals)
+```
+
+```cpp
+class RandomizedSet {
+private:
+    unordered_map<int, int> hashmap;
+    vector<int> nums;
+
+public:
+    RandomizedSet() {
+    }
+    
+    bool insert(int val) {
+        if (hashmap.find(val) != hashmap.end()) {
+            return false;
+        } else {
+            nums.push_back(val);
+            hashmap[val] = nums.size() - 1;
+            return true;
+        }
+    }
+    
+    bool remove(int val) {
+        if (hashmap.find(val) == hashmap.end()) {
+            return false;
+        }
+        int last = nums.back();
+        nums[hashmap[val]] = last;
+        nums.pop_back();
+        hashmap[last] = hashmap[val];
+        hashmap.erase(val);
+        return true;
+    }
+    
+    int getRandom() {
+        return nums[rand() % nums.size()];
+    }
+};
 ```
