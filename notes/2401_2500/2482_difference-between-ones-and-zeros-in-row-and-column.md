@@ -4,16 +4,16 @@ You are given a **0-indexed** $m \times n$ binary matrix `grid`.
 
 A **0-indexed** $m \times n$ difference matrix `diff` is created with the following procedure:
 
-* Let the number of ones in the $i$th row be $onesRow_i$.
-* Let the number of ones in the $j$th column be $onesCol_j$.
-* Let the number of zeros in the $i$th row be $zerosRow_i$.
-* Let the number of zeros in the $j$th column be $zerosCol_j$.
+* let the number of ones in the $i$<sup>th</sup> row be $onesRow_i$.
+* let the number of ones in the $j$<sup>th</sup> column be $onesCol_j$.
+* let the number of zeros in the $i$<sup>th</sup> row be $zerosRow_i$.
+* let the number of zeros in the $j$<sup>th</sup> column be $zerosCol_j$.
 * `diff[i][j]` $= onesRow_i + onesCol_j - zerosRow_i - zerosCol_j$
 
-Return the difference matrix `diff`.
+Return *the difference matrix* `diff`.
 
  
-Example:
+**Example:**
 
 `grid`:
 
@@ -29,8 +29,9 @@ Example:
 | 0 | 0 | 4 |
 | -2 | -2 | 2 |
 
-> **Input**: `grid = [[0,1,1],[1,0,1],[0,0,1]]`
-> **Output**: `[[0,0,4],[0,0,4],[-2,-2,2]]`
+> **Input:** `grid = [[0, 1, 1], [1, 0, 1], [0, 0, 1]]`
+>
+> **Output:** `[[0, 0, 4], [0, 0, 4], [-2, -2, 2]]`
 
 
 ## Brute force
