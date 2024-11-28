@@ -110,6 +110,6 @@ Contradiction. Therefore $u\neq v$, so we don't have any duplicate $a^2 \mathrm{
 
 **Proof.** Let's skip $0$, $1$, and $2$ as they are trivial. When $p\geq 3$, it can be a composite number or a prime number. Suppose the theorem holds for all greater-than-3 prime numbers. If $p$ is composite, then by fundamental theorem of arithmetic, $p$ can be uniquely factored into a product of multiple primes, e.g. $\displaystyle p = \prod_i q_i, i\geq 2$, where all $q$’s are primes. Then we take the first two $q$’s. Bc. we assume the theorem holds for primes numbers, $q_1 = a_1^2 + b_1^2 + c_1^2 + d_1^2$ and $q_2 = a_2^2 + b_2^2 + c_2^2 + d_2^2$. Then by Euler's four-square identity, $Q_1 := q_1 \times q_2 = e_1^2 + f_1^2 + g_1^2 + h_1^2$. Then we take $Q_1$ and $q_3$, both of which are sum of four squares. Then apply Euler's four-square identity again, we can show their product is also a sum of four squares. By induction, it's easy to show that $\displaystyle p = \prod_i q_i$ can be written as a sum of four squares.
 
-Now the problem is to prove the theorem for greater-than-3 primes. Let's assume
+Now the problem is to prove the theorem for greater-than-3 primes. Let's assume 
 
 
